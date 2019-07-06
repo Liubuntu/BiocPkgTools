@@ -51,9 +51,14 @@ generateBiocPkgDOI = function(pkg, authors, pubyear, testing=TRUE) {
   bioc_doi_namespace = ".bioc."
   pkg_doi = paste0(bioc_shoulder,bioc_doi_namespace,pkg)
   url0 = file.path(base_url,pkg_doi)
+  authors <- lapply(strsplit(authors, split=" "), function(x)
+      paste(x[length(x)],
+            paste(x[-length(x)], collapse=" "),
+            sep=", "))
   body = paste(c(sprintf("datacite.title: %s",pkg),
                  sprintf("_target: https://bioconductor.org/packages/%s",pkg),
-                 sprintf("datacite.creator: %s",gsub('\n','',paste(authors,collapse=", "))),
+                 sprintf("datacite.creator: %s",
+                         gsub('\n','',paste(authors, collapse = "; "))),
                  "datacite.publisher: Bioconductor",
                  sprintf("datacite.publicationyear: %d",pubyear),
                  sprintf("datacite.resourcetype: %s","Software")),collapse="\n")
